@@ -65,7 +65,7 @@ export function preprocessPlayer(data: string): string {
 
   for (const [name, options] of Object.entries(found)) {
     // TODO: this is cringe fix plz
-    const unique = new Set(options.map((x) => JSON.stringify(x)));
+    const unique = new Set(options.map((x) => generate(x)));
     if (unique.size !== 1) {
       const message = `found ${unique.size} ${name} function possibilities`;
       throw (
