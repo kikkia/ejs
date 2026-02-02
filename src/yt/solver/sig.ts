@@ -14,9 +14,7 @@ const nsigExpression: DeepPartial<ESTree.Statement> = {
           type: "Identifier",
         },
         arguments: [
-          {
-            type: "Literal",
-          },
+          { type: "Literal" },
           {
             type: "CallExpression",
             callee: {
@@ -54,6 +52,17 @@ const logicalExpression: DeepPartial<ESTree.ExpressionStatement> = {
             arguments: {
               or: [
                 [
+                  {
+                    type: "CallExpression",
+                    callee: {
+                      type: "Identifier",
+                      name: "decodeURIComponent",
+                    },
+                    arguments: [{ type: "Identifier" }],
+                    optional: false,
+                  },
+                ],
+                [
                   { type: "Literal" },
                   {
                     type: "CallExpression",
@@ -66,6 +75,8 @@ const logicalExpression: DeepPartial<ESTree.ExpressionStatement> = {
                   },
                 ],
                 [
+                  { type: "Literal" },
+                  { type: "Literal" },
                   {
                     type: "CallExpression",
                     callee: {
@@ -130,6 +141,71 @@ const identifier: DeepPartial<ESTree.Node> = {
 export function extract(
   node: ESTree.Node,
 ): ESTree.ArrowFunctionExpression | null {
+  // match: deep if
+  if (
+    matchesStructure(node, {
+      type: "ExpressionStatement",
+      expression: {
+        type: "AssignmentExpression",
+        operator: "=",
+        left: {
+          or: [{ type: "Identifier" }, { type: "MemberExpression" }],
+        },
+        right: {
+          type: "FunctionExpression",
+        },
+      },
+    })
+  ) {
+    // TODO
+    if (
+      node.type !== "ExpressionStatement" ||
+      node.expression.type !== "AssignmentExpression" ||
+      node.expression.right.type !== "FunctionExpression"
+    ) {
+      return null;
+    }
+    for (const statement of node.expression.right.body!.body) {
+      if (
+        statement.type !== "IfStatement" ||
+        statement.consequent.type !== "BlockStatement"
+      ) {
+        continue;
+      }
+      for (const statement2 of statement.consequent.body) {
+        if (statement2.type !== "VariableDeclaration") {
+          continue;
+        }
+        for (const declaration of statement2.declarations) {
+          if (declaration.init?.type !== "CallExpression") {
+            continue;
+          }
+          for (const arg of declaration.init.arguments) {
+            if (
+              arg.type !== "CallExpression" ||
+              arg.callee.type !== "Identifier" ||
+              arg.callee.name !== "decodeURIComponent"
+            ) {
+              continue;
+            }
+            return {
+              type: "ArrowFunctionExpression",
+              params: [
+                {
+                  type: "Identifier",
+                  name: "sig",
+                },
+              ],
+              body: processSigCallExpression(declaration.init),
+              async: false,
+              expression: false,
+              generator: false,
+            };
+          }
+        }
+      }
+    }
+  }
   if (!matchesStructure(node, identifier)) {
     return null;
   }
@@ -202,31 +278,34 @@ export function extract(
         name: "sig",
       },
     ],
-    body: {
-      type: "CallExpression",
-      callee: {
-        type: "Identifier",
-        name: call.callee.name,
-      },
-      arguments:
-        call.arguments.length === 1
-          ? [
-              {
-                type: "Identifier",
-                name: "sig",
-              },
-            ]
-          : [
-              call.arguments[0],
-              {
-                type: "Identifier",
-                name: "sig",
-              },
-            ],
-      optional: false,
-    },
+    body: processSigCallExpression(call),
     async: false,
     expression: false,
     generator: false,
+  };
+}
+
+function processSigCallExpression(
+  call: ESTree.CallExpression,
+): ESTree.CallExpression {
+  return {
+    type: "CallExpression",
+    callee: call.callee,
+    arguments: call.arguments.map((arg) =>
+      matchesStructure(arg, {
+        type: "CallExpression",
+        callee: {
+          type: "Identifier",
+          name: "decodeURIComponent",
+        },
+        optional: false,
+      })
+        ? ({
+            type: "Identifier",
+            name: "sig",
+          } satisfies ESTree.Expression)
+        : arg,
+    ),
+    optional: false,
   };
 }

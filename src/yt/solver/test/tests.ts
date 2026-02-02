@@ -300,6 +300,142 @@ export const tests: {
       },
     ],
   },
+  {
+    // sig: tce: deep if: multiple matching but giving same solution
+    player: "42c5570b",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "CRoXjB-R-R" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "EN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavcOmNdYN-wUtgEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if
+    player: "ed3f6ea5",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "CRoXjB-R-R" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "EN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavcOmNdYN-wUtgEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if: another, similar structure using && instead of if
+    player: "d6afc319",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "5RA1UjcYMe33HCQ" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXt2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtS",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if
+    player: "8da75a6a",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "Q3JvBQziA7PvI" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "g7aNhudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyJxCBGgIARwsSdQfJ2CZ",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "54bd1de4",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "ka-slAQ31sijFN" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0titeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtp",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "f104ea90",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "n5DnuOYzgrSUbWp" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "fJC2JtQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEZaepit0z7AtIEsgOV2SX-jhSHMNy0NXNG_1kOyBf6HPuAuCduhv",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "3510b6ff",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "n5DnuOYzgrSUbWp" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "fJC2JtQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEZaepit0z7AtIEsgOV2SX-jhSHMNy0NXNG_1kOyBf6HPuAuCduhv",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "0675bd00",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "n5DnuOYzgrSUbWp" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "fJC2JtQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEZaepit0z7AtIEsgOV2SX-jhSHMNy0NXNG_1kOyBf6HPuAuCduhv",
+      },
+    ],
+  },
 ];
 
 export const players = new Map([
