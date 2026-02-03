@@ -380,9 +380,10 @@ jobs:
           name: player-js
       - name: Run Deno tests
         run: |
-          deno test \
+          xargs -n 1 -P 8 deno test \
             --no-prompt \
-            --allow-read=src/yt/solver/test/players/
+            --allow-read=src/yt/solver/test/players/ \
+            <<<$'main\ntcc\ntce\nes5\nes6\ntv\ntv_es6\nphone'
 
   bun_build:
     name: Test Bun build
