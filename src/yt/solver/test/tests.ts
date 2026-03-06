@@ -86,7 +86,7 @@ export const tests: {
   {
     // tce causes exception even in browser
     player: "3752a005",
-    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone", "tablet"],
+    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone"],
     n: [
       // Synthetic test
       { input: "0eRGgQWJGfT5rFHFj", expected: "j22ZtsqVsR0Dn" },
@@ -104,7 +104,7 @@ export const tests: {
   {
     // tce causes exception even in browser
     player: "afc7785b",
-    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone", "tablet"],
+    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone"],
     n: [
       // Synthetic test
       { input: "0eRGgQWJGfT5rFHFj", expected: "j22ZtsqVsR0Dn" },
@@ -122,7 +122,7 @@ export const tests: {
   {
     // tce causes exception even in browser
     player: "b9645327",
-    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone", "tablet"],
+    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone"],
     n: [
       // Synthetic test
       { input: "0eRGgQWJGfT5rFHFj", expected: "j22ZtsqVsR0Dn" },
@@ -140,7 +140,7 @@ export const tests: {
   {
     // tce causes exception even in browser
     player: "035b9195",
-    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone", "tablet"],
+    variants: ["main", "tcc", "es5", "es6", "tv", "tv_es6", "phone"],
     n: [
       // Synthetic test
       { input: "0eRGgQWJGfT5rFHFj", expected: "j22ZtsqVsR0Dn" },
@@ -251,6 +251,238 @@ export const tests: {
       },
     ],
   },
+  {
+    player: "638ec5c6",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "1qov8-KM-yH" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "MhudCuAuP-6fByOk1_GNXN7gNHHShjyXS2VOgsEItAJz0tipeav0OmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+      },
+    ],
+  },
+  {
+    player: "87644c66",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "iF5NxEm1BYk" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "atJC2JfQdSswRAtgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEvIepit0zJAtIEsgOV2SXZjhSHMNy0NXNG_1kOyBf6HPuAuCduh-a7Ng",
+      },
+    ],
+  },
+  {
+    // tce variant broke sig solving; n and other variants are added only for regression testing
+    player: "c1c87fb0",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "jCHBK5GuAFNa2" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "ttJC2JfQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEvaepit0zJAtIEsgOV2SXZjhSHMNy0NXNGa1kOyBf6HPuAuCduh-_",
+      },
+    ],
+  },
+  {
+    player: "4e51e895",
+    variants: ["main"],
+    n: [
+      // Synthetic test
+      { input: "0eRGgQWJGfT5rFHFj", expected: "t5kO23_msekBur" },
+    ],
+    sig: [
+      {
+        // Synthetic test
+        input:
+          "AL6p_8AwdY9yAhRzK8rYA_9n97Kizf7_9n97Kizf7_9n97Kizf7_9n97Kizf7_9n97Kizf7_9n97Kizf7",
+        expected:
+          "AwdY9yAhRzK8rYA_9n97Kizf7_9n97Kizf7_9n9pKizf7_9n97Kizf7_9n97Kizf7_9n97Kizf7",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if: multiple matching but giving same solution
+    player: "42c5570b",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "CRoXjB-R-R" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "EN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavcOmNdYN-wUtgEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if
+    player: "ed3f6ea5",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "CRoXjB-R-R" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "EN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavcOmNdYN-wUtgEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if: another, similar structure using && instead of if
+    player: "d6afc319",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "5RA1UjcYMe33HCQ" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXt2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtS",
+      },
+    ],
+  },
+  {
+    // sig: tce: deep if
+    player: "8da75a6a",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "Q3JvBQziA7PvI" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "g7aNhudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyJxCBGgIARwsSdQfJ2CZ",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "54bd1de4",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "ka-slAQ31sijFN" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0titeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtp",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "f104ea90",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "n5DnuOYzgrSUbWp" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "fJC2JtQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEZaepit0z7AtIEsgOV2SX-jhSHMNy0NXNG_1kOyBf6HPuAuCduhv",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "3510b6ff",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "n5DnuOYzgrSUbWp" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "fJC2JtQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEZaepit0z7AtIEsgOV2SX-jhSHMNy0NXNG_1kOyBf6HPuAuCduhv",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "0675bd00",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "n5DnuOYzgrSUbWp" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "fJC2JtQdSswRAIgGBCxZyAfKyi0cjXCb3DqEctUw-NYdNmOEZaepit0z7AtIEsgOV2SX-jhSHMNy0NXNG_1kOyBf6HPuAuCduhv",
+      },
+    ],
+  },
+  {
+    // sig: tce: call with 3 parameters
+    player: "e0528946",
+    n: [
+      // Synthetic test
+      { input: "ZdZIqFPQK-Ty8wId", expected: "cGKEGBME8PGi7z" },
+    ],
+    sig: [
+      // Synthetic test
+      {
+        input:
+          "gN7a-hudCuAuPH6fByOk1_GNXN0yNMHShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2CJtt",
+        expected:
+          "7a-hudCuAuPH6fByOk1_GNXN0yNMgShjZXS2VOgsEItAJz0tipeavEOmNdYN-wUtcEqD3bCXjc0iyKfAyZxCBGgIARwsSdQfJ2C",
+      },
+    ],
+  },
+  {
+    // sig: es6: call with 3 parameters
+    player: "94667337",
+    n: [{ input: "BQoJvGBkC2nj1ZZLK-", expected: "ib1ShEOGoFXIIw" }],
+    sig: [
+      {
+        input:
+          "NJAJEij0EwRgIhAI0KExTgjfPk-MPM9MAdzyyPRt=BM8-XO5tm5hlMCSVpAiEAv7eP3CURqZNSPow8BXXAoazVoXgeMP7gH9BdylHCwgw=gwzz",
+        expected:
+          "AJEij0EwRgIhAI0KExTgjfPk-MPM9MNdzyyPRtzBM8-XO5tm5hlMCSVpAiEAv7eP3CURqZNSPow8BXXAoazVoXgeMP7gH9BdylHCwgw=",
+      },
+    ],
+  },
 ];
 
 export const players = new Map([
@@ -262,7 +494,8 @@ export const players = new Map([
   ["tv", "tv-player-ias.vflset/tv-player-ias.js"],
   ["tv_es6", "tv-player-es6.vflset/tv-player-es6.js"],
   ["phone", "player-plasma-ias-phone-en_US.vflset/base.js"],
-  ["tablet", "player-plasma-ias-tablet-en_US.vflset/base.js"],
+  ["es6_tcc", "player_es6_tcc.vflset/en_US/base.js"],
+  ["es6_tce", "player_es6_tce.vflset/en_US/base.js"],
 ] as const);
 
 export type Variant = typeof players extends Map<infer T, unknown> ? T : never;
