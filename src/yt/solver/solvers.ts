@@ -106,19 +106,9 @@ export function getSolutions(
       found.sig.push(sig);
     }
   }
-  // Single-script recovery fallback:
-  // derive one high-confidence candidate from full-statement role behavior.
-  if (found.n.length === 0) {
-    const nFallback = extractNFromRole(statements);
-    if (nFallback) {
-      found.n.push(nFallback);
-    }
-  }
-  if (found.n.length === 0 || found.n.every(isIdentitySolver)) {
-    const nGeneric = extractNGenericTransform(statements);
-    if (nGeneric) {
-      found.n.push(nGeneric);
-    }
+  const nRole = extractNFromRole(statements);
+  if (nRole) {
+    found.n = [nRole];
   }
   if (found.sig.length === 0) {
     const sigFallback = extractSigFromRole(statements);
@@ -141,6 +131,297 @@ export function getFromPrepared(code: string): {
 function multiTry(
   generators: ESTree.ArrowFunctionExpression[],
 ): ESTree.ArrowFunctionExpression {
+  const body: ESTree.Statement[] = [
+    {
+      type: "VariableDeclaration",
+      kind: "const",
+      declarations: [
+        {
+          type: "VariableDeclarator",
+          id: {
+            type: "Identifier",
+            name: "_results",
+          },
+          init: {
+            type: "NewExpression",
+            callee: {
+              type: "Identifier",
+              name: "Set",
+            },
+            arguments: [],
+          },
+        },
+      ],
+    },
+    {
+      type: "ForOfStatement",
+      left: {
+        type: "VariableDeclaration",
+        kind: "const",
+        declarations: [
+          {
+            type: "VariableDeclarator",
+            id: {
+              type: "Identifier",
+              name: "_generator",
+            },
+            init: null,
+          },
+        ],
+      },
+      right: {
+        type: "ArrayExpression",
+        elements: generators,
+      },
+      body: {
+        type: "BlockStatement",
+        body: [
+          {
+            type: "TryStatement",
+            block: {
+              type: "BlockStatement",
+              body: [
+                {
+                  type: "VariableDeclaration",
+                  kind: "const",
+                  declarations: [
+                    {
+                      type: "VariableDeclarator",
+                      id: {
+                        type: "Identifier",
+                        name: "_value",
+                      },
+                      init: {
+                        type: "CallExpression",
+                        callee: {
+                          type: "Identifier",
+                          name: "_generator",
+                        },
+                        arguments: [
+                          {
+                            type: "Identifier",
+                            name: "_sig",
+                          },
+                        ],
+                        optional: false,
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: "IfStatement",
+                  test: {
+                    type: "BinaryExpression",
+                    left: {
+                      type: "Identifier",
+                      name: "_value",
+                    },
+                    right: {
+                      type: "Identifier",
+                      name: "_sig",
+                    },
+                    operator: "===",
+                  },
+                  consequent: {
+                    type: "BlockStatement",
+                    body: [
+                      {
+                        type: "ContinueStatement",
+                        label: null,
+                      },
+                    ],
+                  },
+                  alternate: null,
+                },
+                {
+                  type: "ExpressionStatement",
+                  expression: {
+                    type: "CallExpression",
+                    callee: {
+                      type: "MemberExpression",
+                      object: {
+                        type: "Identifier",
+                        name: "_results",
+                      },
+                      computed: false,
+                      property: {
+                        type: "Identifier",
+                        name: "add",
+                      },
+                      optional: false,
+                    },
+                    arguments: [
+                      {
+                        type: "Identifier",
+                        name: "_value",
+                      },
+                    ],
+                    optional: false,
+                  },
+                },
+              ],
+            },
+            handler: {
+              type: "CatchClause",
+              param: null,
+              body: {
+                type: "BlockStatement",
+                body: [],
+              },
+            },
+            finalizer: null,
+          },
+        ],
+      },
+      await: false,
+    },
+  ];
+
+  body.push(
+    {
+      type: "IfStatement",
+      test: {
+        type: "BinaryExpression",
+        left: {
+          type: "MemberExpression",
+          object: {
+            type: "Identifier",
+            name: "_results",
+          },
+          computed: false,
+          property: {
+            type: "Identifier",
+            name: "size",
+          },
+          optional: false,
+        },
+        right: {
+          type: "Literal",
+          value: 1,
+        },
+        operator: "!==",
+      },
+      consequent: {
+        type: "BlockStatement",
+        body: [
+          {
+            type: "ThrowStatement",
+            argument: {
+              type: "TemplateLiteral",
+              expressions: [
+                {
+                  type: "CallExpression",
+                  callee: {
+                    type: "MemberExpression",
+                    object: {
+                      type: "CallExpression",
+                      callee: {
+                        type: "MemberExpression",
+                        object: {
+                          type: "Identifier",
+                          name: "Array",
+                        },
+                        computed: false,
+                        property: {
+                          type: "Identifier",
+                          name: "from",
+                        },
+                        optional: false,
+                      },
+                      arguments: [
+                        {
+                          type: "Identifier",
+                          name: "_results",
+                        },
+                      ],
+                      optional: false,
+                    },
+                    computed: false,
+                    property: {
+                      type: "Identifier",
+                      name: "join",
+                    },
+                    optional: false,
+                  },
+                  arguments: [
+                    {
+                      type: "Literal",
+                      value: ", ",
+                    },
+                  ],
+                  optional: false,
+                },
+              ],
+              quasis: [
+                {
+                  type: "TemplateElement",
+                  value: {
+                    cooked: "invalid solutions: ",
+                    raw: "invalid solutions: ",
+                  },
+                  tail: false,
+                },
+                {
+                  type: "TemplateElement",
+                  value: {
+                    cooked: "",
+                    raw: "",
+                  },
+                  tail: true,
+                },
+              ],
+            },
+          },
+        ],
+      },
+      alternate: null,
+    },
+    {
+      type: "ReturnStatement",
+      argument: {
+        type: "MemberExpression",
+        object: {
+          type: "CallExpression",
+          callee: {
+            type: "MemberExpression",
+            object: {
+              type: "CallExpression",
+              callee: {
+                type: "MemberExpression",
+                object: {
+                  type: "Identifier",
+                  name: "_results",
+                },
+                computed: false,
+                property: {
+                  type: "Identifier",
+                  name: "values",
+                },
+                optional: false,
+              },
+              arguments: [],
+              optional: false,
+            },
+            computed: false,
+            property: {
+              type: "Identifier",
+              name: "next",
+            },
+            optional: false,
+          },
+          arguments: [],
+          optional: false,
+        },
+        computed: false,
+        property: {
+          type: "Identifier",
+          name: "value",
+        },
+        optional: false,
+      },
+    },
+  );
+
   return {
     type: "ArrowFunctionExpression",
     params: [
@@ -151,294 +432,7 @@ function multiTry(
     ],
     body: {
       type: "BlockStatement",
-      body: [
-        {
-          type: "VariableDeclaration",
-          kind: "const",
-          declarations: [
-            {
-              type: "VariableDeclarator",
-              id: {
-                type: "Identifier",
-                name: "_results",
-              },
-              init: {
-                type: "NewExpression",
-                callee: {
-                  type: "Identifier",
-                  name: "Set",
-                },
-                arguments: [],
-              },
-            },
-          ],
-        },
-        {
-          type: "ForOfStatement",
-          left: {
-            type: "VariableDeclaration",
-            kind: "const",
-            declarations: [
-              {
-                type: "VariableDeclarator",
-                id: {
-                  type: "Identifier",
-                  name: "_generator",
-                },
-                init: null,
-              },
-            ],
-          },
-          right: {
-            type: "ArrayExpression",
-            elements: generators,
-          },
-          body: {
-            type: "BlockStatement",
-            body: [
-              {
-                type: "TryStatement",
-                block: {
-                  type: "BlockStatement",
-                  body: [
-                    {
-                      type: "VariableDeclaration",
-                      kind: "const",
-                      declarations: [
-                        {
-                          type: "VariableDeclarator",
-                          id: {
-                            type: "Identifier",
-                            name: "_value",
-                          },
-                          init: {
-                            type: "CallExpression",
-                            callee: {
-                              type: "Identifier",
-                              name: "_generator",
-                            },
-                            arguments: [
-                              {
-                                type: "Identifier",
-                                name: "_sig",
-                              },
-                            ],
-                            optional: false,
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      type: "IfStatement",
-                      test: {
-                        type: "BinaryExpression",
-                        left: {
-                          type: "Identifier",
-                          name: "_value",
-                        },
-                        right: {
-                          type: "Identifier",
-                          name: "_sig",
-                        },
-                        operator: "===",
-                      },
-                      consequent: {
-                        type: "BlockStatement",
-                        body: [
-                          {
-                            type: "ContinueStatement",
-                            label: null,
-                          },
-                        ],
-                      },
-                      alternate: null,
-                    },
-                    {
-                      type: "ExpressionStatement",
-                      expression: {
-                        type: "CallExpression",
-                        callee: {
-                          type: "MemberExpression",
-                          object: {
-                            type: "Identifier",
-                            name: "_results",
-                          },
-                          computed: false,
-                          property: {
-                            type: "Identifier",
-                            name: "add",
-                          },
-                          optional: false,
-                        },
-                        arguments: [
-                          {
-                            type: "Identifier",
-                            name: "_value",
-                          },
-                        ],
-                        optional: false,
-                      },
-                    },
-                  ],
-                },
-                handler: {
-                  type: "CatchClause",
-                  param: null,
-                  body: {
-                    type: "BlockStatement",
-                    body: [],
-                  },
-                },
-                finalizer: null,
-              },
-            ],
-          },
-          await: false,
-        },
-        {
-          type: "IfStatement",
-          test: {
-            type: "BinaryExpression",
-            left: {
-              type: "MemberExpression",
-              object: {
-                type: "Identifier",
-                name: "_results",
-              },
-              computed: false,
-              property: {
-                type: "Identifier",
-                name: "size",
-              },
-              optional: false,
-            },
-            right: {
-              type: "Literal",
-              value: 1,
-            },
-            operator: "!==",
-          },
-          consequent: {
-            type: "BlockStatement",
-            body: [
-              {
-                type: "ThrowStatement",
-                argument: {
-                  type: "TemplateLiteral",
-                  expressions: [
-                    {
-                      type: "CallExpression",
-                      callee: {
-                        type: "MemberExpression",
-                        object: {
-                          type: "CallExpression",
-                          callee: {
-                            type: "MemberExpression",
-                            object: {
-                              type: "Identifier",
-                              name: "Array",
-                            },
-                            computed: false,
-                            property: {
-                              type: "Identifier",
-                              name: "from",
-                            },
-                            optional: false,
-                          },
-                          arguments: [
-                            {
-                              type: "Identifier",
-                              name: "_results",
-                            },
-                          ],
-                          optional: false,
-                        },
-                        computed: false,
-                        property: {
-                          type: "Identifier",
-                          name: "join",
-                        },
-                        optional: false,
-                      },
-                      arguments: [
-                        {
-                          type: "Literal",
-                          value: ", ",
-                        },
-                      ],
-                      optional: false,
-                    },
-                  ],
-                  quasis: [
-                    {
-                      type: "TemplateElement",
-                      value: {
-                        cooked: "invalid solutions: ",
-                        raw: "invalid solutions: ",
-                      },
-                      tail: false,
-                    },
-                    {
-                      type: "TemplateElement",
-                      value: {
-                        cooked: "",
-                        raw: "",
-                      },
-                      tail: true,
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          alternate: null,
-        },
-
-        {
-          type: "ReturnStatement",
-          argument: {
-            type: "MemberExpression",
-            object: {
-              type: "CallExpression",
-              callee: {
-                type: "MemberExpression",
-                object: {
-                  type: "CallExpression",
-                  callee: {
-                    type: "MemberExpression",
-                    object: {
-                      type: "Identifier",
-                      name: "_results",
-                    },
-                    computed: false,
-                    property: {
-                      type: "Identifier",
-                      name: "values",
-                    },
-                    optional: false,
-                  },
-                  arguments: [],
-                  optional: false,
-                },
-                computed: false,
-                property: {
-                  type: "Identifier",
-                  name: "next",
-                },
-                optional: false,
-              },
-              arguments: [],
-              optional: false,
-            },
-            computed: false,
-            property: {
-              type: "Identifier",
-              name: "value",
-            },
-            optional: false,
-          },
-        },
-      ],
+      body,
     },
     async: false,
     expression: false,
@@ -527,55 +521,6 @@ function extractNFromRole(
 
   if (!best) return null;
   const rewriterName = best.fn.name;
-  const body = best.fn.fn.body;
-  if (body.type !== "BlockStatement") return null;
-
-  const nVars = new Set<string>();
-  let transform: string | null = null;
-  walk(body, (n, parent) => {
-    if (
-      n.type === "CallExpression" &&
-      n.callee.type === "MemberExpression" &&
-      n.callee.property.type === "Identifier" &&
-      n.callee.property.name === "get" &&
-      n.arguments[0]?.type === "Literal" &&
-      n.arguments[0].value === "n"
-    ) {
-      if (parent?.type === "VariableDeclarator" && parent.id.type === "Identifier") {
-        nVars.add(parent.id.name);
-      } else if (
-        parent?.type === "AssignmentExpression" &&
-        parent.left.type === "Identifier"
-      ) {
-        nVars.add(parent.left.name);
-      }
-      return;
-    }
-    if (
-      transform === null &&
-      n.type === "CallExpression" &&
-      n.callee.type === "Identifier" &&
-      n.arguments.some((arg) => arg.type === "Identifier" && nVars.has(arg.name))
-    ) {
-      transform = n.callee.name;
-    }
-  });
-
-  if (transform) {
-    return {
-      type: "ArrowFunctionExpression",
-      params: [{ type: "Identifier", name: "n" }],
-      body: {
-        type: "CallExpression",
-        callee: { type: "Identifier", name: transform },
-        arguments: [{ type: "Identifier", name: "n" }],
-        optional: false,
-      },
-      async: false,
-      expression: false,
-      generator: false,
-    };
-  }
 
   // Fallback: use n URL rewriter function directly and re-extract /n/<value>.
   // This is what runtime probe validated for 6c5cb4f4 (FBF).
@@ -683,12 +628,10 @@ function extractSigFromRole(
   statements: ESTree.Statement[],
 ): ESTree.ArrowFunctionExpression | null {
   const named = collectNamedFunctions(statements);
-  let best:
-    | {
-        score: number;
-        fn: NamedFunction;
-      }
-    | null = null;
+  const ranked: Array<{
+    score: number;
+    fn: NamedFunction;
+  }> = [];
 
   for (const entry of named) {
     const body = entry.fn.body;
@@ -715,15 +658,42 @@ function extractSigFromRole(
     });
     if (!hasSet) continue;
     const score = (hasSet ? 1 : 0) + (hasAlrYes ? 3 : 0);
-    if (!best || score > best.score) {
-      best = { score, fn: entry };
-    }
+    ranked.push({ score, fn: entry });
   }
 
-  if (!best) return null;
-  const fn = best.fn.fn;
-  if (fn.body.type !== "BlockStatement") return null;
+  if (ranked.length === 0) return null;
+  ranked.sort((a, b) => b.score - a.score);
 
+  // For tied scores, prefer candidate functions that can actually emit a solver expression.
+  let best: {
+    score: number;
+    solver: ESTree.ArrowFunctionExpression;
+    quality: number;
+    line: number | null;
+  } | null = null;
+
+  for (const cand of ranked) {
+    const built = buildSigSolverFromFunction(cand.fn.fn);
+    if (!built) continue;
+    const line = cand.fn.fn.loc?.start.line ?? null;
+    if (
+      !best ||
+      cand.score > best.score ||
+      (cand.score === best.score && built.quality > best.quality) ||
+      (cand.score === best.score &&
+        built.quality === best.quality &&
+        (line ?? 1e9) < (best.line ?? 1e9))
+    ) {
+      best = { score: cand.score, solver: built.solver, quality: built.quality, line };
+    }
+  }
+  return best?.solver ?? null;
+}
+
+function buildSigSolverFromFunction(
+  fn: ESTree.FunctionDeclaration | ESTree.FunctionExpression | ESTree.ArrowFunctionExpression,
+): { solver: ESTree.ArrowFunctionExpression; quality: number } | null {
+  if (fn.body.type !== "BlockStatement") return null;
   const paramNames = fn.params
     .filter((p): p is ESTree.Identifier => p.type === "Identifier")
     .map((p) => p.name);
@@ -758,8 +728,6 @@ function extractSigFromRole(
   });
 
   if (solverExpr === null) {
-    // Newer obfuscation may use computed method calls instead of `.set(...)`.
-    // Example: urlObj[v[idx]](spParam, transformedSigExpr)
     walk(fn.body, (n) => {
       if (solverExpr !== null || n.type !== "CallExpression" || n.arguments.length < 2) {
         return;
@@ -802,90 +770,19 @@ function extractSigFromRole(
     });
   }
 
+  if (isTrivialSigExpr(solverExpr)) return null;
+  const quality = scoreTransformExpr(solverExpr);
+
   return {
-    type: "ArrowFunctionExpression",
-    params: [{ type: "Identifier", name: "sig" }],
-    body: solverExpr,
-    async: false,
-    expression: true,
-    generator: false,
-  };
-}
-
-function extractNGenericTransform(
-  statements: ESTree.Statement[],
-): ESTree.ArrowFunctionExpression | null {
-  const named = collectNamedFunctions(statements);
-  let best: { name: string; score: number } | null = null;
-
-  for (const entry of named) {
-    if (entry.fn.params.length !== 1) continue;
-    const p = entry.fn.params[0];
-    if (p.type !== "Identifier") continue;
-    if (entry.fn.body.type !== "BlockStatement") continue;
-
-    const paramName = p.name;
-    let score = 0;
-    let hasReturnCall = false;
-    let hasNUrlRoleHints = false;
-
-    walk(entry.fn.body, (n) => {
-      if (
-        n.type === "CallExpression" &&
-        n.callee.type === "MemberExpression" &&
-        n.callee.property.type === "Identifier" &&
-        n.callee.property.name === "get" &&
-        n.arguments[0]?.type === "Literal" &&
-        n.arguments[0].value === "n"
-      ) {
-        hasNUrlRoleHints = true;
-      }
-      if (n.type === "Literal" && typeof n.value === "string" && n.value.includes("/n/")) {
-        hasNUrlRoleHints = true;
-      }
-      if (
-        n.type === "ReturnStatement" &&
-        n.argument?.type === "CallExpression" &&
-        n.argument.callee.type === "Identifier" &&
-        n.argument.arguments.some(
-          (a) => a.type === "Identifier" && a.name === paramName,
-        )
-      ) {
-        hasReturnCall = true;
-        score += 2;
-      }
-      if (n.type === "CallExpression" && n.callee.type === "MemberExpression") {
-        const prop = n.callee.property;
-        if (prop.type === "Identifier") {
-          if (["split", "join", "reverse", "slice", "splice"].includes(prop.name)) score += 1;
-          if (["charCodeAt"].includes(prop.name)) score += 1;
-        }
-      }
-      if (n.type === "CallExpression" && n.callee.type === "Identifier") {
-        if (["fromCharCode"].includes(n.callee.name)) score += 1;
-      }
-    });
-
-    if (hasNUrlRoleHints) continue;
-    if (!hasReturnCall || score < 3) continue;
-    if (!best || score > best.score) {
-      best = { name: entry.name, score };
-    }
-  }
-
-  if (!best) return null;
-  return {
-    type: "ArrowFunctionExpression",
-    params: [{ type: "Identifier", name: "n" }],
-    body: {
-      type: "CallExpression",
-      callee: { type: "Identifier", name: best.name },
-      arguments: [{ type: "Identifier", name: "n" }],
-      optional: false,
+    solver: {
+      type: "ArrowFunctionExpression",
+      params: [{ type: "Identifier", name: "sig" }],
+      body: solverExpr,
+      async: false,
+      expression: true,
+      generator: false,
     },
-    async: false,
-    expression: false,
-    generator: false,
+    quality,
   };
 }
 
@@ -934,13 +831,20 @@ function scoreTransformExpr(expr: ESTree.Expression): number {
   return score;
 }
 
-function isIdentitySolver(candidate: ESTree.ArrowFunctionExpression): boolean {
-  return (
-    candidate.params.length === 1 &&
-    candidate.params[0].type === "Identifier" &&
-    candidate.body.type === "Identifier" &&
-    candidate.body.name === candidate.params[0].name
-  );
+function isTrivialSigExpr(expr: ESTree.Expression): boolean {
+  if (expr.type === "Identifier" && expr.name === "sig") return true;
+  if (
+    expr.type === "CallExpression" &&
+    expr.callee.type === "MemberExpression" &&
+    expr.callee.object.type === "Identifier" &&
+    expr.callee.object.name === "sig" &&
+    expr.callee.property.type === "Identifier" &&
+    expr.callee.property.name === "toString" &&
+    expr.arguments.length === 0
+  ) {
+    return true;
+  }
+  return false;
 }
 
 function replaceIdentifier<T extends ESTree.Node>(
