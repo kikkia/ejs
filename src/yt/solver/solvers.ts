@@ -455,11 +455,17 @@ function collectNamedFunctions(statements: ESTree.Statement[]): NamedFunction[] 
     if (
       s.type === "ExpressionStatement" &&
       s.expression.type === "AssignmentExpression" &&
-      s.expression.left.type === "Identifier" &&
+      (s.expression.left.type === "Identifier" ||
+        (s.expression.left.type === "MemberExpression" &&
+          s.expression.left.property.type === "Identifier")) &&
       (s.expression.right.type === "FunctionExpression" ||
         s.expression.right.type === "ArrowFunctionExpression")
     ) {
-      out.push({ name: s.expression.left.name, fn: s.expression.right });
+      const name =
+        s.expression.left.type === "Identifier"
+          ? s.expression.left.name
+          : s.expression.left.property.name;
+      out.push({ name, fn: s.expression.right });
       continue;
     }
     if (s.type === "VariableDeclaration") {
@@ -493,6 +499,7 @@ function extractNFromRole(
     if (body.type !== "BlockStatement") continue;
     let hasGetN = false;
     let hasNPath = false;
+    let hasGNsCtor = false;
     walk(body, (n) => {
       if (
         n.type === "CallExpression" &&
@@ -511,9 +518,18 @@ function extractNFromRole(
         const rx = (n as unknown as { regex?: { pattern?: string } }).regex;
         if (rx?.pattern?.includes("\\/n\\/")) hasNPath = true;
       }
+      if (
+        n.type === "NewExpression" &&
+        n.callee.type === "MemberExpression" &&
+        n.callee.object.type === "Identifier" &&
+        n.callee.object.name === "g" &&
+        n.callee.property.type === "Identifier"
+      ) {
+        hasGNsCtor = true;
+      }
     });
-    if (!hasGetN || !hasNPath) continue;
-    const score = (hasGetN ? 2 : 0) + (hasNPath ? 2 : 0);
+    if (!hasGetN || !hasGNsCtor) continue;
+    const score = (hasGetN ? 2 : 0) + (hasNPath ? 2 : 0) + (hasGNsCtor ? 4 : 0);
     if (!best || score > best.score) {
       best = { score, fn: entry };
     }
